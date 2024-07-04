@@ -65,6 +65,6 @@ export const verifyEmailOtp = async (
       .json(new ApiResponse(200, updateOtp, "User Registered Successfuly"));
   } catch (error) {
     console.log(error);
-    throw new ApiError(400, "User not verifie something wrong");
+    next(error);
   }
 };
