@@ -7,7 +7,7 @@ export const AppDataSource = new DataSource({
     port: 3306,
     username: "nadeemrana",
     password: "12345",
-    database: "jwttest",
+    database: "commerce",
     synchronize: true, // Automatically synchronize database schema with entities
     logging: false,
     entities: [User],
