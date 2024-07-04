@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
-import { User } from "../entities/User"
+import { User } from "../models/entities/User"
+import { Otp } from "../models/entities/Otp"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -10,7 +11,7 @@ export const AppDataSource = new DataSource({
     database: "commerce",
     synchronize: true, // Automatically synchronize database schema with entities
     logging: false,
-    entities: [User],
+    entities: [User,Otp],
     migrations: [],
     subscribers: [],
 });
