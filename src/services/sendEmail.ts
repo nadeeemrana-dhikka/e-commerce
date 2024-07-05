@@ -1,5 +1,5 @@
 import test from "node:test";
-
+import { EMAIL_PASS,EMAIL_USER } from "../database/secrets";
 const nodemailer = require("nodemailer");
 export async function mailSender(email: string, otp: string) {
   const transporter = nodemailer.createTransport({
@@ -7,13 +7,13 @@ export async function mailSender(email: string, otp: string) {
     secure: true,
     port: 465,
     auth: {
-      user: "nadeema.aipl@gmail.com",
-      pass: "inth rwer pynk bhtl",
+      user: EMAIL_USER,
+      pass: EMAIL_PASS,
     }
   });
 
   const mailOptions = {
-    from: "nadeema.aipl@gmail.com",
+    from: EMAIL_USER,
     to: email,
     subject: "Password Reset Request ",
     text: `Dear User, \n

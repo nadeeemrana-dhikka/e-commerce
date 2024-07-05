@@ -15,4 +15,6 @@ export class User {
   password!: string;
   @Column()
   phone!: string;
+  @Column()
+  profile: string = "";
 }

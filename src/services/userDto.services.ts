@@ -1,7 +1,5 @@
 import {
-  IsNumber,
   IsString,
-  IsDateString,
   IsEmail,
   IsPhoneNumber,
 } from "class-validator";
@@ -14,4 +12,10 @@ export class userRegisterDto {
   phone!: string;
   @IsString()
   password!: string;
+ 
+}
+
+export class emailDto{
+  @IsEmail()
+  email!: string;
 }

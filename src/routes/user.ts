@@ -1,8 +1,15 @@
 import { Router, Request, Response } from "express";
 import { createUser, verifyEmailOtp } from "../controllers/user.controller";
+import { alreadyExistOrNotEmailforRegister } from '../middlewares/emailAlreadyExist.auth'
 import { sentOtpByMail } from "../services/sentOtpViaMail";
+import { upload } from "../middlewares/multer.middleware";
 const user = Router();
-user.post("/email", sentOtpByMail);
+user.post("/registerEmail", alreadyExistOrNotEmailforRegister,sentOtpByMail);
 user.post("/verifyEmailOtp", verifyEmailOtp);
-user.post("/create", createUser);
+user.post("/createUserWithDetais", upload.fields([
+    {
+        name: "avatar",
+        maxCount: 1
+    },
+]), createUser);
 export default user;
