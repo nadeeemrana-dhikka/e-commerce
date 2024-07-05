@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsPhoneNumber,
 } from "class-validator";
+import { Any } from "typeorm";
 export class userRegisterDto {
   @IsString()
   name!: string;

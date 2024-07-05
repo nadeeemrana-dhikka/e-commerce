@@ -8,9 +8,7 @@ import { validate, ValidationError } from "class-validator";
 import { ApiResponse } from "../utility/ApiResponse";
 import { userRegisterDto } from "../services/userDto.services";
 import bcrypt from "bcryptjs";
-import fs from 'fs';
-import path from 'path';
-import cloudinary from 'cloudinary';
+import { uploadOnCloudinary } from "../utility/cloudinary";
 const userRepository = AppDataSource.getRepository(User);
 const otpRepository = AppDataSource.getRepository(Otp);
 
@@ -59,11 +57,8 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    let { name, email, password, phone } = req.body;
-    if ([name, email, password, phone].some((field) => field.trim() === "")) {
-      next(new Error("All field are required"));
-    }
-
+    let { name, email, password, phone ,profilePic} = req.body;
+    
     const input = plainToInstance(userRegisterDto, req.body);
     validate(input).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
@@ -72,7 +67,9 @@ export const createUser = async (
             Object.values(error.constraints || {})
           )
           .flat();
-        res.status(400).json({ message: errorMessages });
+       return res.status(400).json({ message: errorMessages });
+        // return next(new Error({ message: errorMessages }));
+
       } else {
         console.log(input);
       }
@@ -94,9 +91,17 @@ export const createUser = async (
     const salt = bcrypt.genSaltSync(10); // 10 is the number of salt rounds
     password = await bcrypt.hashSync(password, salt);
 // file upload word start 
+  // const filePath = req.file?.path;
+  // const cloudinaryResponse = await uploadOnCloudinary(filePath);
 
+  // if (!cloudinaryResponse) {
+  //   return res.status(500).json({ message: "Failed to upload image to Cloudinary" });
+  // }
+  // const profile = cloudinaryResponse.secure_url;
+console.log(req.file?.path)
 // end
-    const newUser = userRepository.create({ name, email, password, phone });
+const profile = ""
+    const newUser = userRepository.create({ name, email, password, phone,profile});
     const saveUser = await userRepository.save(newUser);
     if (!saveUser) {
       return next(new Error("user not register for some reasons"));
