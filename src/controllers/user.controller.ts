@@ -57,10 +57,10 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    let { name, email, password, phone ,profilePic} = req.body;
+    let { name, email, password, phone } = req.body;
     
     const input = plainToInstance(userRegisterDto, req.body);
-    validate(input).then((errors: ValidationError[]) => {
+   await validate(input).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
         const errorMessages = errors
           .map((error: ValidationError) =>
@@ -68,8 +68,6 @@ export const createUser = async (
           )
           .flat();
        return res.status(400).json({ message: errorMessages });
-        // return next(new Error({ message: errorMessages }));
-
       } else {
         console.log(input);
       }
@@ -91,16 +89,17 @@ export const createUser = async (
     const salt = bcrypt.genSaltSync(10); // 10 is the number of salt rounds
     password = await bcrypt.hashSync(password, salt);
 // file upload word start 
-  // const filePath = req.file?.path;
-  // const cloudinaryResponse = await uploadOnCloudinary(filePath);
-
-  // if (!cloudinaryResponse) {
-  //   return res.status(500).json({ message: "Failed to upload image to Cloudinary" });
-  // }
-  // const profile = cloudinaryResponse.secure_url;
-console.log(req.file?.path)
+  const filePath = req.file?.path;
+  // console.log(filePath)
+ const originalname = req.file?.filename;
+  const cloudinaryResponse = await uploadOnCloudinary(filePath,originalname);
+console.log("response of cloudinary ",cloudinaryResponse);
+  if (!cloudinaryResponse) {
+    return res.status(500).json({ message: "Failed to upload image to Cloudinary" });
+  }
+  const profile = cloudinaryResponse.secure_url;
 // end
-const profile = ""
+// const profile = ""
     const newUser = userRepository.create({ name, email, password, phone,profile});
     const saveUser = await userRepository.save(newUser);
     if (!saveUser) {
