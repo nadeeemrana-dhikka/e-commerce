@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "./entities/User";
-import { Otp } from "./entities/Otp";
-import { AppDataSource } from "../database/connection";
-const userRepository = AppDataSource.getRepository(User);
+import { Otp } from "../../models/entities/Otp";
+import { AppDataSource } from "../../models/database/connection";
 const otpRepository = AppDataSource.getRepository(Otp);
 export async function otpDataInsert(req: Request, res: Response, otp: string) {
     try {
@@ -28,3 +26,31 @@ export async function otpDataInsert(req: Request, res: Response, otp: string) {
       res.status(500).send(error);
     }
   }
+
+
+  export async function findUserByEmailInOtpTable(email:string) {
+     const user = await otpRepository.findOne({ where: { email } });
+     return user;
+  }
+
+  export async function updateOtp(email:string) {
+    return await otpRepository.update(
+      { email },
+      { isVerified: true }
+    );
+ }  
+
+ export async function  emailVerifiedInOtpTable(email:string){
+  return await otpRepository.find({
+    where: {
+      email: email,
+      isVerified: true,
+    },
+  })
+ }
+
+
+
+ export async function deleteOtp(email:string) {
+  return await otpRepository.delete({ email });
+}  

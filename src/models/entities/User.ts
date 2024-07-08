@@ -17,4 +17,6 @@ export class User {
   phone!: string;
   @Column()
   profile: string = "";
+  @Column()
+  isAdmin: boolean = false;
 }

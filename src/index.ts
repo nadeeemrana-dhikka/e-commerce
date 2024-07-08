@@ -1,8 +1,8 @@
 import express from 'express';
-import { connection } from "./database/connection";
+import { connection } from "./models/database/connection";
 import bodyParser from "body-parser";
 import rootRouter from "./routes";
-import { PORT } from "./database/secrets"
+import { PORT } from "./models/database/secrets"
 import errorHandler  from './middlewares/errorHandler';
 connection().then(async() =>{
     const app = express();
