@@ -19,4 +19,6 @@ export class User {
   profile: string = "";
   @Column()
   isAdmin: boolean = false;
+  @Column()
+  refreshToken: string = "";
 }

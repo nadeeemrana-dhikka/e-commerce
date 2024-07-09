@@ -26,3 +26,15 @@ export class emailDto{
   @IsEmail()
   email!: string;
 }
+
+export class passwordDto{
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
+    minUppercase: 1
+  })
+  @Length(8, 20)
+  password!: string;
+}

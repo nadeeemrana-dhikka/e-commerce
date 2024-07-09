@@ -1,39 +1,41 @@
-import { mailSender } from "./sendEmail";
-import { otpDataInsert } from "../otp/otpDBOperation";
-import { Request, Response, NextFunction } from "express";
-import { generateOtp } from "../otp/genrateOtp";
-import { emailDto } from "../user/userDto.services";
-import { validate, ValidationError } from "class-validator";
-import { plainToInstance } from "class-transformer";
-import { Subject } from "typeorm/persistence/Subject";
+import { mailSender } from "./sendEmail"; // Importing mailSender function from sendEmail module
+import { otpDataInsert } from "../otp/otpDBOperation"; // Importing otpDataInsert function from otpDBOperation module
+import { Request, Response } from "express"; // Importing Request and Response types from express
+import { generateOtp } from "../otp/genrateOtp"; // Importing generateOtp function from genrateOtp module
+import { emailDto } from "../user/userDto.services"; // Importing emailDto from userDto.services module
+import { validate, ValidationError } from "class-validator"; // Importing validate and ValidationError from class-validator
+import { plainToInstance } from "class-transformer"; // Importing plainToInstance from class-transformer
 
+// Function to send OTP by email
 export async function sentOtpByMail(
-  req: Request,
-  res: Response,subject:string) {
+  req: Request, // Request object
+  res: Response, // Response object
+  subject: string // Email subject
+) {
   try {
-    const { email } = req.body;
-    const input = plainToInstance(emailDto, req.body);
-    validate(input).then((errors: ValidationError[]) => {
+    const { email } = req.body; // Extracting email from request body
+    const input = plainToInstance(emailDto, req.body); // Transforming plain object to class instance for validation
+    validate(input).then((errors: ValidationError[]) => { // Validating the input
       if (errors.length > 0) {
         const errorMessages = errors
           .map((error: ValidationError) =>
             Object.values(error.constraints || {})
           )
-          .flat();
-        res.status(400).json({ message: errorMessages });
+          .flat(); // Flattening the error messages array
+        res.status(400).json({ message: errorMessages }); // Sending validation error messages as response
       } else {
-        console.log(input);
+        console.log(input); // Logging the validated input
       }
     });
-    const otp = await generateOtp();
-    console.log(otp);
-  const mailTest =   await mailSender(email,subject, otp) ;
-  if (!mailTest) {
-    new Error("mail not send something wrong")
-  }
-    const saveOTP = await otpDataInsert(req, res, otp);
-    res.status(200).send(saveOTP);
+    const otp = await generateOtp(); // Generating an OTP
+    console.log(otp); // Logging the generated OTP
+    const mailTest = await mailSender(email, subject, otp); // Sending OTP via email
+    if (!mailTest) {
+      throw new Error("Mail not sent, something went wrong"); // Throwing error if email sending fails
+    }
+    const saveOTP = await otpDataInsert(req, res, otp); // Saving the OTP data
+    res.status(200).send(saveOTP); // Sending success response with saved OTP data
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send(error); // Sending error response
   }
 }
