@@ -14,12 +14,12 @@ export class Permission {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
-  name!: string;
+  @Column({ unique: true })
+  permission!: string;
 
   @ManyToMany(() => Role, role => role.permissions)
-  roles: Role[];
+  roles!: Role[];
 
-  @ManyToMany(() => UserHasPermission, userHasPermission => userHasPermission.permissions)
-  userHasPermissions: UserHasPermission[];
+  @ManyToMany(() => UserHasPermissions, userHasPermissions => userHasPermissions.permissions)
+  userHasPermissions!: UserHasPermissions[];
 }
