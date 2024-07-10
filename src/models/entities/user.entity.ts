@@ -23,9 +23,9 @@ export class User {
   @Column()
   refreshToken!: string;
 
-  @OneToOne(() => UserHasPermissions , {cascade:true,onDelete: 'CASCADE',eager: true})
-  @JoinColumn()
-  Role!: UserHasPermissions;
+  // @OneToOne(() => UserHasPermissions , {cascade:true,onDelete: 'CASCADE',eager: true})
+  // @JoinColumn()
+  // user?: UserHasPermissions ;
   
   @Column()
   status: number = 0; 

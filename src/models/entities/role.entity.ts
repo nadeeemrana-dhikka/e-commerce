@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  JoinTable,
+  JoinTable,DeleteDateColumn
 } from 'typeorm';
 import { Permission } from './permission.entity';
 import { UserHasPermissions } from './user_has_permission.entity';
@@ -22,4 +22,7 @@ export class Role {
 
   @ManyToMany(() => UserHasPermissions, (userHasPermissions) => userHasPermissions.roles)
   userHasPermissions!: UserHasPermissions[];
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }
