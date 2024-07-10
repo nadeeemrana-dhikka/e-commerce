@@ -174,7 +174,7 @@ export const loginUser = async (
     const token = await jwtToken(user); // Generating JWT token
     const refreshToken = await jwtRefreshToken(user.id); // Generating refresh token
     refreshTokenSaveInDB(email, refreshToken);
-    
+
     res
       .status(200)
       .cookie("accessToken", token, options) // Setting access token as cookie

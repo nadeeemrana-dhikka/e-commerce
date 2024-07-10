@@ -1,4 +1,4 @@
-import { User } from "../../models/entities/User"; // Importing the User entity
+import { User } from "../../models/entities/user.entity"; // Importing the User entity
 import { AppDataSource } from "../../models/database/connection"; // Importing the data source for database connection
 const userRepository = AppDataSource.getRepository(User); // Getting the repository for the User entity
 
