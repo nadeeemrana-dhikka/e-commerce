@@ -5,8 +5,12 @@ import { AppDataSource } from "../../models/database/connection"; // Importing t
 const roleRepository = AppDataSource.getRepository(Role); // Getting the repository for the Otp entity
 
 export async function roleInsertInDb(role: string) {
-  const newRole = new Role();
-  newRole.role = role;
+  // find role and check already exist or not
+  const roleExist = await roleRepository.findOneBy({ role });
+  if (roleExist) {
+    return false;
+    }
+  const newRole = roleRepository.create({ role });
   return await roleRepository.save(newRole);
 }
 export async function getallroles() {

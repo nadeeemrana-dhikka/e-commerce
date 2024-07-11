@@ -1,7 +1,12 @@
 import { User } from "../../models/entities/user/user.entity"; // Importing the User entity
+import { Role } from "../../models/entities/user/role.entity"; // Importing the User entity
+import { Permission } from "../../models/entities/user/permission.entity";
 import { AppDataSource } from "../../models/database/connection"; // Importing the data source for database connection
+import exp from "constants";
 const userRepository = AppDataSource.getRepository(User); // Getting the repository for the User entity
 
+const permissionRepository = AppDataSource.getRepository(Permission);
+const roleRepository = AppDataSource.getRepository(Role);
 // Function to find a user by email
 export async function findOneUser(email: string) {
   return await userRepository.findOne({ where: { email } }); // Querying the user repository to find a user by email
@@ -42,4 +47,90 @@ export async function refreshTokenSaveInDB(
     throw new Error("User not found"); // If no user was updated, throw an error
   }
   return updateResult;
+}
+
+export async function assignRole(userId: number, roleId: number) {
+  const user = await userRepository.findOne({
+    where: { id: userId },
+    relations: ["roles"],
+  });
+  // console.log(user)
+  if (!user) {
+    throw new Error("User not found");
+  }
+  // find this role already exist or not of this user
+  // Check if the user already has the role
+  const roleAlreadyExist = user.roles.find((role) => role.id == roleId);
+  if (roleAlreadyExist) {
+    throw new Error("Role already assigned");
+  }
+  const role = await roleRepository.findOne({ where: { id: roleId } });
+  if (!role) {
+    throw new Error("Role not found");
+  }
+  user.roles.push(role);
+  const result = await userRepository.save(user);
+  if (!result) {
+    throw new Error("User not found");
+  }
+  return result;
+}
+
+export async function assignPermission(roleId: number, permissionId: number): Promise<void> {
+  try {
+    const role = await roleRepository.findOne({ where: { id: roleId }, relations: ["permissions"] });
+
+    if (!role) {
+      console.error("Role not found:", roleId);
+      throw new Error("Role not found");
+    }
+    const permission = await permissionRepository.findOne({ where: { id: permissionId } });
+
+
+    if (!permission) {
+      console.error("Permission not found:", permissionId);
+      throw new Error("Permission not found");
+    }
+
+    const hasPermission = role.permissions.some(existingPermission => existingPermission.id === permission.id);
+    if (hasPermission) {
+      console.error("Permission is already assigned to the role:", permission);
+      throw new Error("Permission is already assigned to the role");
+    }
+
+    role.permissions.push(permission);
+    await roleRepository.save(role);
+  } catch (error) {
+    console.error("Error in assignPermissionToRole:", error);
+    throw error;
+  }
+}
+
+
+
+export async function unassignPermission(roleId: number, permissionId: number): Promise<void> {
+  try {
+    const role = await roleRepository.findOne({ where: { id: roleId }, relations: ["permissions"] });
+    if (!role) {
+      console.error("Role not found:", roleId);
+      throw new Error("Role not found");
+    }
+    const permission = await permissionRepository.findOne({ where: { id: permissionId } });
+
+   
+
+    if (!permission) {
+      console.error("Permission not found:", permissionId);
+      throw new Error("Permission not found");
+    }
+
+    // Filter out the permission to unassign
+    role.permissions = role.permissions.filter(p => p.id !== permission.id);
+
+    // Save the updated role without the permission
+    await roleRepository.save(role);
+  } catch (error) {
+    console.error("Error in unassignPermissionFromRole:", error);
+    throw error;
+  }
 }

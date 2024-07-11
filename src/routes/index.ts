@@ -1,6 +1,6 @@
 import { Router } from "express";
 import user from "./user/user";
-import role from "./role";
+import role from "./user/role";
 import permissions from "./user/permissions";
 import asignPermission from "./user/asignPermission";
 const router = Router();

@@ -2,8 +2,7 @@ import { DataSource } from "typeorm"; // Importing DataSource from TypeORM
 import { User } from "../entities/user/user.entity"; // Importing the User entity
 import { Otp } from "../entities/user/otp.entity"; // Importing the Otp entity
 import { Role } from "../entities/user/role.entity";
-import { Permission } from "../entities/auth/permission.entity";
-import { UserHasPermissions } from "../entities/user_has_permission.entity";
+import { Permission } from "../entities/user/permission.entity";
 // Creating a new DataSource instance with configuration options
 export const AppDataSource = new DataSource({
   type: "mysql", // Type of database
@@ -14,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: "commerce", // Database name
   synchronize: true, // Automatically synchronize database schema with entities
   logging: false, // Disable logging
-  entities: [User, Otp, Role, Permission, UserHasPermissions], // Entities to be included in the data source
+  entities: [User, Otp, Role, Permission], // Entities to be included in the data source
   migrations: [], // Migrations (none in this case)
   subscribers: [], // Subscribers (none in this case)
 });

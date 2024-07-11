@@ -8,14 +8,14 @@ import {
   BaseEntity
 } from 'typeorm';
 import { User } from './user.entity';
-import { Permission } from '../auth/permission.entity';
+import { Permission } from './permission.entity';
 
 @Entity()
 export class Role extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToMany(() => User, (user) => user.role)
+  @ManyToMany(() => User, (user) => user.roles)
   @JoinTable({ name: "user_has_roles" })
   users!: Role[]
 

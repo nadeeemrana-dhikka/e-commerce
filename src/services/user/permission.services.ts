@@ -1,5 +1,5 @@
 import { Request, Response } from "express"; // Importing Request and Response types from express
-import { Permission } from "../../models/entities/auth/permission.entity"; // Importing the Otp entity
+import { Permission } from "../../models/entities/user/permission.entity"; // Importing the Otp entity
 import { AppDataSource } from "../../models/database/connection"; // Importing the data source for database connection
 
 const permissionRepository = AppDataSource.getRepository(Permission); // Getting the repository for the Otp entity

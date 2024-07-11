@@ -8,8 +8,8 @@ import {
   JoinTable,
   CreateDateColumn,
 } from "typeorm";
-import { Role } from "../user/role.entity";
-import { User } from "../user/user.entity";
+import { Role } from "./role.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class Permission extends BaseEntity {

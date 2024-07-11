@@ -1,10 +1,12 @@
-import { Router } from "express"; // Importing Router from express
+import { Router } from "express";
 import {
-    asignPermission
-} from "../../controllers/user/asignPermission.controller"; // Importing controller functions
+  assignPermissionToRole,
+  assignRoleToUser,unassignPermissionFromRole
+} from "../../controllers/user/asignPermission.controller";
 
-const asignPermissionRouter = Router(); // Creating a new Router instance
-asignPermissionRouter.post("/asign-permission", asignPermission);
-// Permission.post("/get-permission", getPermissions);
+const assignRouter = Router();
 
-export default asignPermissionRouter; // Exporting the router
+assignRouter.post("/assign-role", assignRoleToUser);
+assignRouter.post("/assign-permission",assignPermissionToRole);
+assignRouter.post("/unassign-permisson", unassignPermissionFromRole);
+export default assignRouter;

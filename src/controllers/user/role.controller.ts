@@ -16,7 +16,7 @@ export async function createRole(
     const { role } = req.body;
     const result = await roleInsertInDb(role);
     if (!result) {
-      throw new ApiError(400, "Role not save");
+      throw new ApiError(400, "Role already exist");
     }
     res.status(200).json({ message: "Role save" });
   } catch (error) {

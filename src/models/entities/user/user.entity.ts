@@ -1,15 +1,15 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne,JoinColumn, BaseEntity, ManyToMany, JoinTable, DeleteDateColumn, CreateDateColumn} from "typeorm";
 import { Role } from "./role.entity";
-import { Permission } from "../auth/permission.entity";
+import { Permission } from "./permission.entity";
 
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToMany(() => Role, (role) => role.users)
+  @ManyToMany(() => Role, (roles) => roles.users)
   @JoinTable({ name: "user_has_roles" })
-  role!: Role[]
+  roles!: Role[]
 
   @ManyToMany(() => Permission, (permission) => permission.users)
   @JoinTable({ name: "user_has_permissions" })
