@@ -1,6 +1,6 @@
-import { JWT_SECRET } from "../models/database/secrets"; // Importing JWT_SECRET from secrets
+import { JWT_SECRET } from "../../models/database/secrets"; // Importing JWT_SECRET from secrets
 import jwt from "jsonwebtoken"; // Importing jsonwebtoken library
-import { TOKEN_EXPIRE, REFRESH_TOKEN_EXPIRE } from "../models/database/secrets"; // Importing TOKEN_EXPIRE and REFRESH_TOKEN_EXPIRE from secrets
+import { TOKEN_EXPIRE, REFRESH_TOKEN_EXPIRE } from "../../models/database/secrets"; // Importing TOKEN_EXPIRE and REFRESH_TOKEN_EXPIRE from secrets
 
 // Function to generate a JWT access token
 export async function jwtToken(user: any) {

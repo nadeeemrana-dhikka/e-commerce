@@ -1,5 +1,5 @@
 import { Request, Response } from "express"; // Importing Request and Response types from express
-import { Otp } from "../../models/entities/otp.entity"; // Importing the Otp entity
+import { Otp } from "../../models/entities/user/otp.entity"; // Importing the Otp entity
 import { AppDataSource } from "../../models/database/connection"; // Importing the data source for database connection
 
 const otpRepository = AppDataSource.getRepository(Otp); // Getting the repository for the Otp entity

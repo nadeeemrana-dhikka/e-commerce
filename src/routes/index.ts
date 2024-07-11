@@ -1,10 +1,12 @@
 import { Router } from "express";
-import user from "./user";
+import user from "./user/user";
 import role from "./role";
-import  permissions  from "./permissions";
+import permissions from "./user/permissions";
+import asignPermission from "./user/asignPermission";
 const router = Router();
 // router.use("/", oauth);
 router.use("/", user);
 router.use("/", role);
 router.use("/", permissions);
+router.use("/", asignPermission);
 export default router;

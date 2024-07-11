@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from "express"; // Importing types from express
-import { ApiError } from "../utility/ApiError"; // Importing custom error handling class
+import { ApiError } from "../../utility/ApiError"; // Importing custom error handling class
 import { plainToInstance } from "class-transformer"; // Importing plainToInstance from class-transformer
 import { validate, ValidationError } from "class-validator"; // Importing validate and ValidationError from class-validator
-import { ApiResponse } from "../utility/ApiResponse"; // Importing custom API response class
+import { ApiResponse } from "../../utility/ApiResponse"; // Importing custom API response class
 import {
   userRegisterDto,
   passwordDto,
-} from "../services/user/userDto.services"; // Importing DTOs for user registration and password
+} from "../../services/user/userDto.services"; // Importing DTOs for user registration and password
 import bcrypt from "bcryptjs"; // Importing bcrypt for password hashing
-import { uploadOnCloudinary } from "../utility/cloudinary"; // Importing function to upload images to Cloudinary
+import { uploadOnCloudinary } from "../../utility/cloudinary"; // Importing function to upload images to Cloudinary
 import dotenv from "dotenv"; // Importing dotenv to load environment variables
 dotenv.config({ path: ".env" }); // Loading environment variables from .env file
 import {
@@ -16,15 +16,15 @@ import {
   updateOtp,
   emailVerifiedInOtpTable,
   deleteOtp,
-} from "../services/otp/otpDBOperation"; // Importing OTP related database operations
+} from "../../services/user/otp.services"; // Importing OTP related database operations
 import {
   findOneUser,
   insertUserInDB,
   updatePassword,
   refreshTokenSaveInDB,
-} from "../services/user/user.Operation"; // Importing user related database operations
-import { jwtToken, jwtRefreshToken } from "../services/jwt.auth"; // Importing JWT token generation functions
-import { sentOtpByMail } from "../services/email/sentOtpViaMail"; // Importing function to send OTP via email
+} from "../../services/user/user.services"; // Importing user related database operations
+import { jwtToken, jwtRefreshToken } from "../../services/auth/jwt.auth"; // Importing JWT token generation functions
+import { sentOtpByMail } from "../../services/user/sentOtpViaMail"; // Importing function to send OTP via email
 export const sendOtpForRegistration = async (
   req: Request,
   res: Response,

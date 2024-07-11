@@ -4,8 +4,8 @@ import {
   getallpermissions,
   permissionUpdateInDb,
   permissionDeleteInDb,
-} from "../services/permissions/permissionsDBOperation";
-import { ApiError } from "../utility/ApiError";
+} from "../../services/user/permission.services";
+import { ApiError } from "../../utility/ApiError";
 
 export async function createPermission(
   req: Request,

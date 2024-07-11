@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm"; // Importing DataSource from TypeORM
-import { User } from "../entities/user.entity"; // Importing the User entity
-import { Otp } from "../entities/otp.entity"; // Importing the Otp entity
-import { Role } from "../entities/role.entity";
-import { Permission } from "../entities/permission.entity";
+import { User } from "../entities/user/user.entity"; // Importing the User entity
+import { Otp } from "../entities/user/otp.entity"; // Importing the Otp entity
+import { Role } from "../entities/user/role.entity";
+import { Permission } from "../entities/auth/permission.entity";
 import { UserHasPermissions } from "../entities/user_has_permission.entity";
 // Creating a new DataSource instance with configuration options
 export const AppDataSource = new DataSource({
