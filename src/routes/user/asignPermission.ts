@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {
-  assignPermissionToRole,
-  assignRoleToUser,unassignPermissionFromRole
+  asignPermissionToRole,
+  asignRoleToUser,unasignPermissionFromRole
 } from "../../controllers/user/asignPermission.controller";
 
-const assignRouter = Router();
+const asignRouter = Router();
 
-assignRouter.post("/assign-role", assignRoleToUser);
-assignRouter.post("/assign-permission",assignPermissionToRole);
-assignRouter.post("/unassign-permisson", unassignPermissionFromRole);
-export default assignRouter;
+asignRouter.post("/asign-role", asignRoleToUser);
+asignRouter.post("/asign-permission",asignPermissionToRole);
+asignRouter.post("/unasign-permisson", unasignPermissionFromRole);
+export default asignRouter;

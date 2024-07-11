@@ -1,54 +1,54 @@
 import { Request, Response, NextFunction } from "express";
 import {
-  assignPermission,
-  assignRole,unassignPermission
+  asignPermission,
+  asignRole,unasignPermission
 } from "../../services/user/user.services";
 import { ApiError } from "../../utility/ApiError";
 
-export async function assignRoleToUser(
+export async function asignRoleToUser(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
     const { userId, roleId } = req.body;
-    const roleResult = await assignRole(userId, roleId);
+    const roleResult = await asignRole(userId, roleId);
     res.status(200).json(roleResult);
   } catch (error) {
     next(error);
   }
 }
 
-export async function assignPermissionToRole(
+export async function asignPermissionToRole(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
     const { roleId, permissionId } = req.body;
-    await assignPermission(roleId, permissionId);
+    await asignPermission(roleId, permissionId);
     res
       .status(200)
-      .json({ message: "Permission assigned to role successfully" });
+      .json({ message: "Permission asigned to role successfully" });
   } catch (error) {
-    console.error("Error in assignPermissionToRole:", error);
+    console.error("Error in asignPermissionToRole:", error);
     next(error);
   }
 }
 
-export async function unassignPermissionFromRole(
+export async function unasignPermissionFromRole(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
     const { roleId, permissionId } = req.body;
-    await unassignPermission(roleId, permissionId);
+    await unasignPermission(roleId, permissionId);
     res
       .status(200)
-      .json({ message: "Permission unassigned from role successfully" });
+      .json({ message: "Permission unasigned from role successfully" });
   } catch (error) {
-    console.error("Error in unassignPermissionFromRole:", error);
+    console.error("Error in unasignPermissionFromRole:", error);
     next(error);
   }
 }
