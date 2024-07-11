@@ -3,10 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToMany,
-  OneToMany,
+  DeleteDateColumn,
 } from "typeorm";
 import { Role } from "./role.entity";
-import { User } from "./user.entity";
 import { UserHasPermissions } from "./user_has_permission.entity";
 
 @Entity()
@@ -17,9 +16,15 @@ export class Permission {
   @Column({ unique: true })
   permission!: string;
 
-  @ManyToMany(() => Role, role => role.permissions)
+  @ManyToMany(() => Role, (role) => role.permissions)
   roles!: Role[];
 
-  @ManyToMany(() => UserHasPermissions, userHasPermissions => userHasPermissions.permissions)
+  @ManyToMany(
+    () => UserHasPermissions,
+    (userHasPermissions) => userHasPermissions.permissions
+  )
   userHasPermissions!: UserHasPermissions[];
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }
