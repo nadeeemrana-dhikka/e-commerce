@@ -115,6 +115,19 @@ export async function unasignPermission(roleId: number, permissionId: number): P
       console.error("Role not found:", roleId);
       throw new Error("Role not found");
     }
+    const permissionExist = await roleRepository.findOne({ 
+      where: { 
+        id: roleId, 
+        permissions: {
+           id: permissionId 
+        }
+      }, 
+      relations: ["permissions"] 
+    });
+    if (!permissionExist) {
+      console.error("Permission not found:", permissionId);
+      throw new Error("Permission not found");
+      }
     const permission = await permissionRepository.findOne({ where: { id: permissionId } });
 
    
