@@ -10,7 +10,9 @@ import {
 import { User } from './user.entity';
 import { Permission } from './permission.entity';
 
-@Entity()
+@Entity({
+  name: "roles"
+})
 export class Role extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;

@@ -10,7 +10,9 @@ import {
 } from "typeorm";
 import { Role } from "./role.entity";
 import { User } from "./user.entity";
-@Entity()
+@Entity(  {
+  name: "permissions"
+})
 export class Permission extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;

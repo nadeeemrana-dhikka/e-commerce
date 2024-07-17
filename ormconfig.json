@@ -1,26 +1,25 @@
-
 {
-    "type": "mysql",
-    "host": "localhost",
-    "port": 3606,
-    "username": "nadeemrana",
-    "password": "12345",
-    "database": "commerce",
-    "synchronize": true,
-    "logging": false,
-    "entities": [
-      "src/entities/**/*.ts"
-    ],
-    "migrations": [
-      "src/migration/**/*.ts"
-    ],
-    "subscribers": [
-      "src/subscriber/**/*.ts"
-    ],
-    "cli": {
-      "entitiesDir": "src/entities",
-      "migrationsDir": "src/migration",
-      "subscribersDir": "src/subscriber"
-    }
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3606,
+  "username": "nadeemrana",
+  "password": "12345",
+  "database": "commerce",
+  "synchronize": false,
+  "logging": false,
+  "migrationsTableName": "migration_table",
+  "entities": [
+    "src/entities/**/*.ts"
+  ],
+  "migrations": [
+    "src/migration/*.ts"
+  ],
+  "subscribers": [
+    "src/subscriber/**/*.ts"
+  ],
+  "cli": {
+    "entitiesDir": "src/entities",
+    "migrationsDir": "src/migration",
+    "subscribersDir": "src/subscriber"
   }
-  
+}

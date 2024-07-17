@@ -1,4 +1,4 @@
-import { DataSource } from "typeorm"; // Importing DataSource from TypeORM
+import { DataSource, Migration } from "typeorm"; // Importing DataSource from TypeORM
 import { User } from "../entities/user/user.entity"; // Importing the User entity
 import { Otp } from "../entities/user/otp.entity"; // Importing the Otp entity
 import { Role } from "../entities/user/role.entity";
@@ -14,7 +14,7 @@ export const AppDataSource = new DataSource({
   synchronize: true, // Automatically synchronize database schema with entities
   logging: false, // Disable logging
   entities: [User, Otp, Role, Permission], // Entities to be included in the data source
-  migrations: [], // Migrations (none in this case)
+  migrations: ["src/migration/**/*.ts"],// Migrations 
   subscribers: [], // Subscribers (none in this case)
 });
 
@@ -28,3 +28,13 @@ export async function connection() {
       console.error('Error during Data Source initialization:', err); // Logging error message
     });
 }
+
+// Migration create and run migration
+
+// typeorm migration:create src/migration/UserMigration
+
+// run migration
+// ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/models/database/connection.ts
+
+// revert migration
+// ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d src/models/database/connection.ts
