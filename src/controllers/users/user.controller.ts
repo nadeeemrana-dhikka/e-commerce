@@ -6,7 +6,7 @@ import { ApiResponse } from "../../utility/ApiResponse"; // Importing custom API
 import {
   userRegisterDto,
   passwordDto,
-} from "../../services/user/userDto.services"; // Importing DTOs for user registration and password
+} from "../../services/users/userDto.services"; // Importing DTOs for user registration and password
 import bcrypt from "bcryptjs"; // Importing bcrypt for password hashing
 import { uploadOnCloudinary } from "../../utility/cloudinary"; // Importing function to upload images to Cloudinary
 import dotenv from "dotenv"; // Importing dotenv to load environment variables
@@ -16,15 +16,18 @@ import {
   updateOtp,
   emailVerifiedInOtpTable,
   deleteOtp,
-} from "../../services/user/otp.services"; // Importing OTP related database operations
+} from "../../services/users/otp.services"; // Importing OTP related database operations
+import { validateDto } from "../../utility/validateDto";
 import {
   findOneUser,
   insertUserInDB,
   updatePassword,
   refreshTokenSaveInDB,
-} from "../../services/user/user.services"; // Importing user related database operations
+  updateUserProfileInDB,
+} from "../../services/users/user.services"; // Importing user related database operations
 import { jwtToken, jwtRefreshToken } from "../../services/auth/jwt.auth"; // Importing JWT token generation functions
-import { sentOtpByMail } from "../../services/user/sentOtpViaMail"; // Importing function to send OTP via email
+import { sentOtpByMail } from "../../services/users/sentOtpViaMail"; // Importing function to send OTP via email
+
 export const sendOtpForRegistration = async (
   req: Request,
   res: Response,
@@ -256,6 +259,51 @@ export const verifyOtpForResetPassword = async (
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds); // Hashing the new password
     updatePassword(email, hashedPassword); // Updating the password in the database
     res.status(200).json({ message: "Password updated successfully" }); // Sending success response
+  } catch (error) {
+    next(error); // Handling any errors
+  }
+};
+
+// update user profile
+export const updateUserProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, name, phone, profile } = req.body; // Extracting user details from request body
+    const validate = await validateDto(req.body, userRegisterDto, next);
+    if (!validate) {
+      return next(new Error("Invalid request"));
+    }
+    if (!email) {
+      return next(new Error("email is required")); // Checking if email is provided
+    }
+    const user = await findOneUser(email); // Finding user by email
+    if (!user) {
+      return next(new Error("User not found")); // If user not found, send error
+    }
+    // object without email update
+    if (req.body.email) {
+      delete req.body.email;
+    }
+    user.name = name;
+    user.phone = phone;
+    user.profile = profile;
+    const details = validateDto(user, userRegisterDto, next);
+    if (!details) {
+      const updatedUser = await updateUserProfileInDB({
+        name,
+        phone,
+        profile,
+      });
+      if (!updatedUser) {
+        return next(new Error("User not updated")); // If user not updated, send error
+      }
+      res
+        .status(200)
+        .json(new ApiResponse(200, updatedUser, "User updated successfully")); // Sending success response
+    }
   } catch (error) {
     next(error); // Handling any errors
   }

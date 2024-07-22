@@ -3,7 +3,7 @@ import {
   createRole,
   getroles,
   updateRole,deleteRole
-} from "../../controllers/user/role.controller"; // Importing controller functions
+} from "../../controllers/users/role.controller"; // Importing controller functions
 
 const role = Router(); // Creating a new Router instance
 role.post("/create-role", createRole);

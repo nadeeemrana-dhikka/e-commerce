@@ -4,7 +4,7 @@ import {
   getallroles,
   roleUpdateInDb,
   roleDeleteInDb,
-} from "../../services/user/roles.services";
+} from "../../services/users/roles.services";
 import { ApiError } from "../../utility/ApiError";
 
 export async function createRole(

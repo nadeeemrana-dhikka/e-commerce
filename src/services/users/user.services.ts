@@ -76,23 +76,32 @@ export async function asignRole(userId: number, roleId: number) {
   return result;
 }
 
-export async function asignPermission(roleId: number, permissionId: number): Promise<void> {
+export async function asignPermission(
+  roleId: number,
+  permissionId: number
+): Promise<void> {
   try {
-    const role = await roleRepository.findOne({ where: { id: roleId }, relations: ["permissions"] });
+    const role = await roleRepository.findOne({
+      where: { id: roleId },
+      relations: ["permissions"],
+    });
 
     if (!role) {
       console.error("Role not found:", roleId);
       throw new Error("Role not found");
     }
-    const permission = await permissionRepository.findOne({ where: { id: permissionId } });
-
+    const permission = await permissionRepository.findOne({
+      where: { id: permissionId },
+    });
 
     if (!permission) {
       console.error("Permission not found:", permissionId);
       throw new Error("Permission not found");
     }
 
-    const hasPermission = role.permissions.some(existingPermission => existingPermission.id === permission.id);
+    const hasPermission = role.permissions.some(
+      (existingPermission) => existingPermission.id === permission.id
+    );
     if (hasPermission) {
       console.error("Permission is already asigned to the role:", permission);
       throw new Error("Permission is already asigned to the role");
@@ -106,31 +115,35 @@ export async function asignPermission(roleId: number, permissionId: number): Pro
   }
 }
 
-
-
-export async function unasignPermission(roleId: number, permissionId: number): Promise<void> {
+export async function unasignPermission(
+  roleId: number,
+  permissionId: number
+): Promise<void> {
   try {
-    const role = await roleRepository.findOne({ where: { id: roleId }, relations: ["permissions"] });
+    const role = await roleRepository.findOne({
+      where: { id: roleId },
+      relations: ["permissions"],
+    });
     if (!role) {
       console.error("Role not found:", roleId);
       throw new Error("Role not found");
     }
-    const permissionExist = await roleRepository.findOne({ 
-      where: { 
-        id: roleId, 
+    const permissionExist = await roleRepository.findOne({
+      where: {
+        id: roleId,
         permissions: {
-           id: permissionId 
-        }
-      }, 
-      relations: ["permissions"] 
+          id: permissionId,
+        },
+      },
+      relations: ["permissions"],
     });
     if (!permissionExist) {
       console.error("Permission not found:", permissionId);
       throw new Error("Permission not found");
-      }
-    const permission = await permissionRepository.findOne({ where: { id: permissionId } });
-
-   
+    }
+    const permission = await permissionRepository.findOne({
+      where: { id: permissionId },
+    });
 
     if (!permission) {
       console.error("Permission not found:", permissionId);
@@ -138,7 +151,7 @@ export async function unasignPermission(roleId: number, permissionId: number): P
     }
 
     // Filter out the permission to unasign
-    role.permissions = role.permissions.filter(p => p.id !== permission.id);
+    role.permissions = role.permissions.filter((p) => p.id !== permission.id);
 
     // Save the updated role without the permission
     await roleRepository.save(role);
@@ -146,4 +159,15 @@ export async function unasignPermission(roleId: number, permissionId: number): P
     console.error("Error in unasignPermissionFromRole:", error);
     throw error;
   }
+}
+
+export async function updateUserProfileInDB({ email, name, phone, profile }: any) {
+  const updateResult = await userRepository.update(
+    { email },
+    { name, phone, profile }
+  ); // Updating the user's password in the database
+  if (updateResult.affected === 0) {
+    throw new Error("User not found"); // If no user was updated, throw an error
+  }
+  return updateResult;
 }

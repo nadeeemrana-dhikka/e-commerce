@@ -6,7 +6,7 @@ import {
   sendOtpForResetPassword,
   sendOtpForRegistration,
   verifyOtpForResetPassword,
-} from "../../controllers/user/user.controller"; // Importing controller functions
+} from "../../controllers/users/user.controller"; // Importing controller functions
 import { upload } from "../../middlewares/multer.middleware"; // Importing multer middleware for file uploads
 
 const user = Router(); // Creating a new Router instance

@@ -3,7 +3,7 @@ import {
   createPermission,
   getPermissions,
   updatePermission,deletePermission
-} from "../../controllers/user/permission.controller"; // Importing controller functions
+} from "../../controllers/users/permission.controller"; // Importing controller functions
 
 const Permission = Router(); // Creating a new Router instance
 Permission.post("/create-permission", createPermission);

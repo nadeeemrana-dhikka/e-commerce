@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   asignPermissionToRole,
   asignRoleToUser,unasignPermissionFromRole
-} from "../../controllers/user/asignPermission.controller";
+} from "../../controllers/users/asignPermission.controller";
 
 const asignRouter = Router();
 

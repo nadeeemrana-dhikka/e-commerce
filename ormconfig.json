@@ -5,7 +5,7 @@
   "username": "nadeemrana",
   "password": "12345",
   "database": "commerce",
-  "synchronize": false,
+  "synchronize": true,
   "logging": false,
   "migrationsTableName": "migration_table",
   "entities": [
