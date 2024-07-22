@@ -6,7 +6,7 @@ import { ApiResponse } from "../../utility/ApiResponse"; // Importing custom API
 import {
   userRegisterDto,
   passwordDto,
-} from "../../services/users/userDto.services"; // Importing DTOs for user registration and password
+} from "../../services/users/userDto.service"; // Importing DTOs for user registration and password
 import bcrypt from "bcryptjs"; // Importing bcrypt for password hashing
 import { uploadOnCloudinary } from "../../utility/cloudinary"; // Importing function to upload images to Cloudinary
 import dotenv from "dotenv"; // Importing dotenv to load environment variables
@@ -16,7 +16,7 @@ import {
   updateOtp,
   emailVerifiedInOtpTable,
   deleteOtp,
-} from "../../services/users/otp.services"; // Importing OTP related database operations
+} from "../../services/users/otp.service"; // Importing OTP related database operations
 import { validateDto } from "../../utility/validateDto";
 import {
   findOneUser,
@@ -24,7 +24,7 @@ import {
   updatePassword,
   refreshTokenSaveInDB,
   updateUserProfileInDB,
-} from "../../services/users/user.services"; // Importing user related database operations
+} from "../../services/users/user.service"; // Importing user related database operations
 import { jwtToken, jwtRefreshToken } from "../../services/auth/jwt.auth"; // Importing JWT token generation functions
 import { sentOtpByMail } from "../../services/users/sentOtpViaMail"; // Importing function to send OTP via email
 

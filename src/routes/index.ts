@@ -1,8 +1,8 @@
 import { Router } from "express";
-import user from "./user/users";
-import role from "./user/roles";
-import permissions from "./user/permissions";
-import asignPermission from "./user/asignPermissions";
+import user from "./user/users.routes";
+import role from "./user/roles.routes";
+import permissions from "./user/permissions.routes";
+import asignPermission from "./user/asignPermissions.routes";
 import product from "../routes/products/products.routes";
 const router = Router();
 // router.use("/", oauth);

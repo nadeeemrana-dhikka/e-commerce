@@ -54,3 +54,5 @@ export class ProductDTO {
     // Timestamp, Last Updated Date (usually handled by the database, no need for validation)
     updatedAt!: Date;
 }
+
+

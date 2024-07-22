@@ -1,8 +1,8 @@
 import { mailSender } from "./sendEmail"; // Importing mailSender function from sendEmail module
-import { otpDataInsert } from "./otp.services"; // Importing otpDataInsert function from otpDBOperation module
+import { otpDataInsert } from "./otp.service"; // Importing otpDataInsert function from otpDBOperation module
 import { Request, Response } from "express"; // Importing Request and Response types from express
 import { generateOtp } from "./genrateOtp"; // Importing generateOtp function from genrateOtp module
-import { emailDto } from "./userDto.services"; // Importing emailDto from userDto.services module
+import { emailDto } from "./userDto.service"; // Importing emailDto from userDto.services module
 import { validate, ValidationError } from "class-validator"; // Importing validate and ValidationError from class-validator
 import { plainToInstance } from "class-transformer"; // Importing plainToInstance from class-transformer
 

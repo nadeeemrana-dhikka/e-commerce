@@ -4,7 +4,7 @@ import {
   getallpermissions,
   permissionUpdateInDb,
   permissionDeleteInDb,
-} from "../../services/users/permission.services";
+} from "../../services/users/permission.service";
 import { ApiError } from "../../utility/ApiError";
 
 export async function createPermission(

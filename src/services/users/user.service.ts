@@ -171,3 +171,4 @@ export async function updateUserProfileInDB({ email, name, phone, profile }: any
   }
   return updateResult;
 }
+

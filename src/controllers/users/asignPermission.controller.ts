@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   asignPermission,
   asignRole,unasignPermission
-} from "../../services/users/user.services";
+} from "../../services/users/user.service";
 import { ApiError } from "../../utility/ApiError";
 
 export async function asignRoleToUser(

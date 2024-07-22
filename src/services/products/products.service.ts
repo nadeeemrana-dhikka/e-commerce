@@ -35,3 +35,10 @@ export const updateProductInDB = async (id: number, product: {}) => {
     }
     return updatedProduct;
 };
+export const deleteProductFromDB = async (id: number) => {
+  const deleteProduct = await productRepository.delete(id);
+  if (!deleteProduct) {
+    return null;
+  }
+  return deleteProduct;
+};

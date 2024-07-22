@@ -8,8 +8,8 @@ import {
   getProduct,
   findProductByName,
   insertProductIntoDB,
-  updateProductInDB,
-} from "../../services/products/products.services";
+  updateProductInDB,deleteProductFromDB
+} from "../../services/products/products.service";
 import { validateDto } from "../../utility/validateDto";
 // insert a product but check using productDto
 export const insertProduct = async (
@@ -129,3 +129,24 @@ export const updateProduct = async (
     next(error);
   }
 };
+// delete a product
+export const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const product = await getProduct(Number(id));
+    if (!product) {
+      throw new ApiError(400, "Product not found");
+    }
+    const deleteProduct = await deleteProductFromDB(product.id);
+    if (!deleteProduct) {
+      throw new ApiError(400, "Product not deleted");
+    }
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};    
