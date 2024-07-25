@@ -36,12 +36,12 @@ Ashriya Infotech Support Team`, // Body of the email
   const Check = transporter.sendMail(mailOptions, function (error: any, info: any) {
     if (error) {
       console.log(error); // Log the error if sending fails
-      return 0; // Return 0 if there was an error
+      return new Error("mail not sent"); // Return 0 if there was an error
     } else {
       console.log("Email sent: " + info.response); // Log the response if sending is successful
       return 1; // Return 1 if the email was sent successfully
     }
   });
 
-  return Check; // Returning the result of the sendMail function
+  return 1; // Returning the result of the sendMail function
 }

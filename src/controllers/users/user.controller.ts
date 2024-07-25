@@ -40,10 +40,13 @@ export const sendOtpForRegistration = async (
       return next(new Error("User already exists")); // If user exists, send error
     }
     const subject = "Registration Request"; // Subject for OTP email
-    await sentOtpByMail(req, res, subject); // Sending OTP via email
-    res
-      .status(200)
-      .json(new ApiResponse(200, updateOtp, "User Registered Successfully")); // Sending success response
+    const saveOTP = await sentOtpByMail(req, res, subject); // Sending OTP via email
+    console.log("Otp not sent error", saveOTP);
+    if (!saveOTP) {
+      return next(new Error("OTP not sent"));
+    }
+    // Sending success response with OTP
+    res.status(200).json("User Registered Successfully");
   } catch (error) {
     next(error); // Handling any errors
   }
@@ -120,13 +123,17 @@ export const createUser = async (
     // Handle file upload
     const filePath = req.file?.path; // Getting file path from request
     const originalname = req.file?.filename; // Getting original file name from request
-    const cloudinaryResponse = await uploadOnCloudinary(filePath, originalname); // Uploading file to Cloudinary
-    if (!cloudinaryResponse) {
-      return res
-        .status(500)
-        .json({ message: "Failed to upload image to Cloudinary" }); // If upload fails, send error
+    let profile = "";
+    if (filePath && originalname) {
+      let cloudinaryResponse = await uploadOnCloudinary(filePath, originalname); // Uploading file to Cloudinary
+      if (!cloudinaryResponse) {
+        return res
+          .status(500)
+          .json({ message: "Failed to upload image to Cloudinary" }); // If upload fails, send error
+      }
+       profile = cloudinaryResponse.secure_url;
     }
-    const profile = cloudinaryResponse.secure_url; // Getting secure URL of uploaded file
+    // Getting secure URL of uploaded file
 
     // Insert the user into the database
     const saveUser = await insertUserInDB({

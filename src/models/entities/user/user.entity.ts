@@ -37,7 +37,7 @@ export class User extends BaseEntity {
   profile!: string;
 
   @Column()
-  refreshToken!: string;
+  refreshToken: string = "0";
 
   @Column({ default: 0 })
   status!: number;

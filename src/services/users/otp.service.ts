@@ -18,15 +18,18 @@ export async function otpDataInsert(req: Request, res: Response, otp: string) {
     var saveOTP;
     if (user.length > 0) { // If OTP data exists for the email, update it
       saveOTP = await otpRepository.update({ email }, { otp, time });
+      console.log("otp updated");
     } else { // If OTP data doesn't exist, create a new OTP object and save it
       otpObj.email = email;
       otpObj.otp = otp;
       otpObj.time = time;
       saveOTP = await otpRepository.save(otpObj);
+      console.log("otp saved");
     }
 
     return saveOTP; // Returning the saved or updated OTP data
   } catch (error) {
+    console.log(error);
     res.status(500).send(error); // Sending 500 status and error message if an error occurs
   }
 }

@@ -7,7 +7,7 @@ import {
   sendOtpForRegistration,
   verifyOtpForResetPassword,
 } from "../../controllers/users/user.controller"; // Importing controller functions
-import { upload } from "../../middlewares/multer.middleware"; // Importing multer middleware for file uploads
+import { upload,handleFileUpload } from "../../middlewares/multer.middleware"; // Importing multer middleware for file uploads
 
 const user = Router(); // Creating a new Router instance
 
@@ -18,8 +18,7 @@ user.post("/signup/step-1", sendOtpForRegistration);
 user.post("/signup/step-2", verifyEmailOtp);
 
 // Route to create a new user (Step 3) with profile picture upload
-user.post("/signup/step-3", upload.single("profilePic"), createUser);
-
+user.post("/signup/step-3", upload.single("profilePic"), handleFileUpload, createUser);
 // Route to log in a user
 user.post("/loginUser", loginUser);
 

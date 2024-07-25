@@ -30,12 +30,18 @@ export async function sentOtpByMail(
     const otp = await generateOtp(); // Generating an OTP
     console.log(otp); // Logging the generated OTP
     const mailTest = await mailSender(email, subject, otp); // Sending OTP via email
+    console.log("mailTest",mailTest);
     if (!mailTest) {
       throw new Error("Mail not sent, something went wrong"); // Throwing error if email sending fails
     }
+    console.log("mail sent");
     const saveOTP = await otpDataInsert(req, res, otp); // Saving the OTP data
-    res.status(200).send(saveOTP); // Sending success response with saved OTP data
+    if(!saveOTP){
+      throw new Error("OTP not saved");
+    }
+    // Sending success response with saved OTP data
+    return true;
   } catch (error) {
-    res.status(400).send(error); // Sending error response
+   return false // Sending error response
   }
 }
