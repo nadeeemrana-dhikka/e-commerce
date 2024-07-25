@@ -1,5 +1,5 @@
 // src/services/order.service.ts
-import { Order } from '../../models/entities/orders/Order.entity';
+import { Order } from '../../models/entities/orders/order.entity';
 import { CreateOrderDto,UpdateOrderDto } from './order.Dto';
 import { AppDataSource } from '../../models/database/connection';
 const orderRepository = AppDataSource.getRepository(Order);
@@ -57,4 +57,3 @@ export class OrderService {
     }
   }
 }
-

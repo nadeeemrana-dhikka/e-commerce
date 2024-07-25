@@ -1,7 +1,6 @@
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import { Request } from "express";
-import { error } from "console";
 
 // Set up storage configuration for multer
 const storage = multer.diskStorage({

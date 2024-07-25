@@ -11,8 +11,9 @@ import {
   updateProductInDB,deleteProductFromDB
 } from "../../services/products/products.service";
 import { validateDto } from "../../utility/validateDto";
+
 // insert a product but check using productDto
-export const insertProduct = async (
+export const createProduct = async (
   req: Request,
   res: Response,
   next: NextFunction

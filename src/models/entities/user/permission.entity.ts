@@ -1,31 +1,24 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  DeleteDateColumn,
-  BaseEntity,
-  JoinTable,
-  CreateDateColumn,
-} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, DeleteDateColumn, BaseEntity, JoinTable, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { Role } from "./role.entity";
 import { User } from "./user.entity";
-@Entity(  {
+
+@Entity({
   name: "permissions"
 })
 export class Permission extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
+
   @Column({ unique: true })
   permission!: string;
 
   @ManyToMany(() => User, (user) => user.permissions)
   @JoinTable({ name: "user_has_permissions" })
-  users!: User[]
+  users!: User[];
 
   @ManyToMany(() => Role, (role) => role.permissions)
-  @JoinTable({ name: "role_has_permissions" })
-  roles!: Role[]
+  // @JoinTable({ name: "role_has_permissions" })
+  roles!: Role[];
 
   @DeleteDateColumn({
     type: 'datetime'
@@ -37,8 +30,8 @@ export class Permission extends BaseEntity {
   })
   created_at?: Date;
 
-  @CreateDateColumn({
-    type: 'datetime',
+  @UpdateDateColumn({
+    type: 'datetime'
   })
   updated_at?: Date;
 }

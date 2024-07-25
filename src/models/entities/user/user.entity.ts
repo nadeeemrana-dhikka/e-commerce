@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany,JoinColumn, BaseEntity, ManyToMany, JoinTable, DeleteDateColumn, CreateDateColumn} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, DeleteDateColumn, CreateDateColumn, BaseEntity, UpdateDateColumn } from "typeorm";
 import { Role } from "./role.entity";
 import { Permission } from "./permission.entity";
-import { Order } from "../orders/Order.entity";
+import { Order } from "../orders/order.entity";
 
 @Entity({
   name: "users"
@@ -10,15 +10,15 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToMany(() => Role, (roles) => roles.users)
+  @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({ name: "user_has_roles" })
-  roles!: Role[]
+  roles!: Role[];
 
   @ManyToMany(() => Permission, (permission) => permission.users)
   @JoinTable({ name: "user_has_permissions" })
-  permissions!: Permission[]
+  permissions!: Permission[];
 
-  @OneToMany(() => Order, order => order.user)
+  @OneToMany(() => Order, (order) => order.user)
   orders!: Order[];
 
   @Column()
@@ -38,9 +38,9 @@ export class User extends BaseEntity {
 
   @Column()
   refreshToken!: string;
-  
-  @Column()
-  status: number = 0; 
+
+  @Column({ default: 0 })
+  status!: number;
 
   @DeleteDateColumn({
     type: 'datetime'
@@ -52,8 +52,8 @@ export class User extends BaseEntity {
   })
   created_at?: Date;
 
-  @CreateDateColumn({
-    type: 'datetime',
+  @UpdateDateColumn({
+    type: 'datetime'
   })
   updated_at?: Date;
 }

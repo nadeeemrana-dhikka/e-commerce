@@ -1,12 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../user/user.entity'; // assuming a User entity exists
 
-@Entity()
+@Entity({name: 'orders'})
 export class Order {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => User, user => user.orders)
+  @ManyToOne(() => User, (user) => user.orders)
   user!: User;
 
   @Column('decimal', { precision: 10, scale: 2 })
