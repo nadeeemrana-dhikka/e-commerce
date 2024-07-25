@@ -8,10 +8,10 @@ export class ProductDTO {
 
     // Product Description
     @IsString()
-    description!: string;
+    description: string = " ";
 
     // Product Price
-    @IsDecimal()
+    @IsInt()
     price!: number;
 
     // Product Category

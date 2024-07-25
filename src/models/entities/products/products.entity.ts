@@ -11,38 +11,38 @@ export class Product {
     name!: string;
 
     // Product Description
-    @Column('text')
+    @Column({ type: 'text', default: '' })
     description!: string;
 
-    // Product Price
-    @Column('decimal')
+    // // Product Price
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.00 })
     price!: number;
 
-    // Product Category
-    @Column()
+    // // Product Category
+    @Column({ default: 'Uncategorized' })
     category!: string;
 
-    // Stock Quantity
-    @Column()
+    // // Stock Quantity
+    @Column({ default: 0 })
     stock!: number;
     
-    // Product Brand
+    // // Product Brand
     @Column({ nullable: true })
     brand!: string;
 
-    // URL of the Product Image
+    // // URL of the Product Image
     @Column({ nullable: true })
     imageUrl!: string;
 
-    // Average Customer Rating
+    // // Average Customer Rating
     @Column({ type: 'decimal', nullable: true, precision: 2, scale: 1 })
     rating!: number;
 
-    // Number of Reviews
+    // // Number of Reviews
     @Column({ type: 'int', nullable: true })
     reviews!: number;
 
-    // Featured Product
+    // // Featured Product
     @Column({ default: false })
     isFeatured!: boolean;
 

@@ -43,6 +43,4 @@ const handleFileUpload = (req: Request, res: Response, next: NextFunction) => {
     // If a file is present, proceed with file handling
     next();
 };
-
-
 export { upload, handleFileUpload };

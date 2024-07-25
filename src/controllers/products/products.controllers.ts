@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductDTO } from "../../services/products/products.Dto";
 import { ApiError } from "../../utility/ApiError";
-import { plainToInstance } from "class-transformer";
-import { validate, ValidationError } from "class-validator";
 import {
   getAllProducts,
   getProduct,
@@ -21,21 +19,14 @@ export const createProduct = async (
   try {
     const { name } = req.body;
     // Validate input using class-validator
-    const input = plainToInstance(ProductDTO, req.body); // Transforming plain object to class instance
-    const validationErrors = await validate(input); // Validating the input
-    if (validationErrors.length > 0) {
-      const errorMessages = validationErrors
-        .map((error: ValidationError) => Object.values(error.constraints || {}))
-        .flat();
-      return next({ message: errorMessages }); // Pass validation errors to the error handler
-    }
+    validateDto(req.body, ProductDTO, next);
     // find the product by name
     const product = await findProductByName(name);
     if (product) {
       return next(new Error("Product already exists")); // If product exists, send error
     }
     // insert the product
-    const saveProduct = await insertProductIntoDB(name);
+    const saveProduct = await insertProductIntoDB(req.body);
     if (saveProduct == null) {
       return next(new Error("Product not saved")); // If product not saved, send error
     }
@@ -44,6 +35,7 @@ export const createProduct = async (
     next(error);
   }
 };
+
 
 export const getProducts = async (
   req: Request,
@@ -117,8 +109,9 @@ export const updateProduct = async (
     product.imageUrl = imageUrl;
     product.isFeatured = isFeatured;
     // check all fields are valid or not
-    const details = validateDto(product, ProductDTO, next);
-    if (!details) {
+    const details =await validateDto(product, ProductDTO, next);
+    console.log(details);
+    if (details) {
       const updatedProduct = await updateProductInDB(product.id, product);
       if (!updatedProduct) {
         return next(new Error("Product not updated")); // If product not updated, send error

@@ -17,9 +17,18 @@ export const findProductByName = async (name: string) => {
   return product;
 };
 
-export const insertProductIntoDB = async (name: string) => {
+export const insertProductIntoDB = async (body: any) => {
   const product = new Product();
-  product.name = name;
+  product.name = body.name;
+  product.description = body.description;
+  product.price = body.price;
+  product.category = body.category;
+  product.stock = body.stock;
+  product.brand = body.brand;
+  product.imageUrl = body.imageUrl;
+  product.rating = body.rating;
+  product.reviews = body.reviews;
+  product.isFeatured = body.isFeatured;
   const saveProduct = await productRepository.save(product);
   if (!saveProduct) {
     return null;
