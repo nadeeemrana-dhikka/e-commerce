@@ -36,7 +36,7 @@ export class ProductDTO {
 
     // Average Customer Rating
     @IsOptional()
-    @IsDecimal({ decimal_digits: '2,1' })
+    @IsDecimal({ decimal_digits: '2' })
     rating!: number;
 
     // Number of Reviews
@@ -48,11 +48,6 @@ export class ProductDTO {
     @IsBoolean()
     isFeatured!: boolean;
 
-    // Timestamp, Product Created Date (usually handled by the database, no need for validation)
-    createdAt!: Date;
-
-    // Timestamp, Last Updated Date (usually handled by the database, no need for validation)
-    updatedAt!: Date;
 }
 
 

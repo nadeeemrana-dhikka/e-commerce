@@ -4,7 +4,7 @@ import bodyParser from "body-parser"; // Importing body-parser for parsing reque
 import rootRouter from "./routes"; // Importing root router
 import { PORT } from "./models/database/secrets"; // Importing port from secrets file
 import errorHandler from "./middlewares/errorHandler"; // Importing error handler middleware
-
+import cookieParser from "cookie-parser";
 connection()
   .then(async () => {
     // Connecting to the database
@@ -14,7 +14,7 @@ connection()
     app.use(bodyParser.json()); // Parsing JSON bodies
     app.use("/", rootRouter); // Mounting root router at the root endpoint
     app.use(errorHandler); // Using error handler middleware
-
+    app.use(cookieParser());
     app.listen(PORT, () => {
       // Starting the server
       console.log(`Server is running on port ${PORT}`); // Logging server startup message

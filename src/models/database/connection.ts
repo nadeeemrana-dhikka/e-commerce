@@ -5,6 +5,7 @@ import { Role } from "../entities/user/role.entity";
 import { Permission } from "../entities/user/permission.entity";
 import { Product } from "../entities/products/products.entity";
 import { Order } from "../entities/orders/order.entity";
+import { Cart } from "../entities/orders/cart.entity";
 // Creating a new DataSource instance with configuration options
 export const AppDataSource = new DataSource({
   type: "mysql", // Type of database
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
   database: "commerce", // Database name
   synchronize: true, // Automatically synchronize database schema with entities
   logging: false, // Disable logging
-  entities: [User, Otp, Role, Permission,Product,Order], // Entities to be included in the data source
+  entities: [User, Otp, Role, Permission,Product,Order,Cart], // Entities to be included in the data source
   migrations: ["src/migration/**/*.ts"],// Migrations 
   subscribers: [], // Subscribers (none in this case)
 });
