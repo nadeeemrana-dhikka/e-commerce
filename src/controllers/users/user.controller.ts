@@ -35,7 +35,9 @@ export const sendOtpForRegistration = async (
 ) => {
   try {
     const { email } = req.body; // Extracting email from request body
+    console.log(req.body);
     const user = await findOneUser(email); // Checking if user already exists
+    console.log(user);
     if (user) {
       return next(new Error("User already exists")); // If user exists, send error
     }
@@ -185,7 +187,7 @@ loginUser = async (
       secure: true,
     };
     const token = await jwtToken(user); // Generating JWT token
-    const refreshToken = await jwtRefreshToken(user.id); // Generating refresh token
+    const refreshToken = await jwtRefreshToken(user); // Generating refresh token
     refreshTokenSaveInDB(email, refreshToken);
 
     res

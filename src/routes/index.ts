@@ -5,7 +5,11 @@ import permissions from "./user/permissions.routes";
 import asignPermission from "./user/asignPermissions.routes";
 import product from "../routes/products/products.routes";
 import cart from "./orders/cart.routes";
+import cookieParser from "cookie-parser";
+
 const router = Router();
+router.use(cookieParser());
+
 // router.use("/", oauth);
 router.use("/", user);
 router.use("/", role);

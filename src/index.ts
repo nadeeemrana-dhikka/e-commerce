@@ -9,6 +9,8 @@ connection()
   .then(async () => {
     // Connecting to the database
     const app = express(); // Creating an Express application instance
+    app.use(cookieParser());
+
     app.use(express.json()); // Parsing JSON bodies
     app.use(bodyParser.urlencoded({ extended: true })); // Parsing URL-encoded bodies
     app.use(bodyParser.json()); // Parsing JSON bodies
