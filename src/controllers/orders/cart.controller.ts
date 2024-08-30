@@ -91,7 +91,7 @@ export const getAllCart = async (
     const cart = await getAllCartByuserId(user?.id);
     console.log(user?.id);
 
-    res.status(200).json(cart;
+    res.status(200).json(cart);
   } catch (error) {
     return next(error);
   }
