@@ -7,7 +7,7 @@ export const getAllProducts = async () => {
   return products;
 };
 
-export const getProduct = async (id: number) => {
+export const getProductViaId = async (id: number) => {
   const product = await productRepository.findOne({ where: { id } });
   return product;
 };

@@ -4,7 +4,7 @@
   "port": 3606,
   "username": "nadeemrana",
   "password": "12345",
-  "database": "commerce",
+  "database": "e_commerce",
   "synchronize": true,
   "logging": false,
   "migrationsTableName": "migration_table",

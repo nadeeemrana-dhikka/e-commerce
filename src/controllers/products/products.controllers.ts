@@ -3,13 +3,17 @@ import { ProductDTO } from "../../services/products/products.Dto";
 import { ApiError } from "../../utility/ApiError";
 import {
   getAllProducts,
-  getProduct,
+  getProductViaId,
   findProductByName,
   insertProductIntoDB,
   updateProductInDB,
   deleteProductFromDB,
 } from "../../services/products/products.service";
+
+import { checkIfUserIsAdmin } from '../../services/users/user.service'
 import { validateDto } from "../../utility/validateDto";
+import { uploadOnCloudinary } from "../../utility/cloudinary"; // Importing function to upload images to Cloudinary
+import { jwtVerification } from "../../utility/jwtVerification"
 
 // insert a product but check using productDto
 export const createProduct = async (
@@ -18,8 +22,20 @@ export const createProduct = async (
   next: NextFunction
 ) => {
   try {
-    const { name, rating } = req.body;
+    // const { name, rating, } = req.body;
     // Convert rating to a number if it is a string
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     if (typeof req.body.rating === 'string') {
       const parsedRating = parseFloat(req.body.rating);
       if (isNaN(parsedRating)) {
@@ -29,19 +45,34 @@ export const createProduct = async (
     }
 
     // Validate input using class-validator
-    validateDto(req.body, ProductDTO, next);
+    // validateDto(req.body, ProductDTO, next);
     // find the product by name
     // const product = await findProductByName(name);
     // if (product) {
     //   return next(new Error("Product already exists")); // If product exists, send error
     // }
     // insert the product
+    const filePath = req.file?.path; // Getting file path from request
+    const originalname = req.file?.filename; // Getting original file name from request
+    console.log(filePath)
+    let profile = "";
+    // if (filePath && originalname) {
+    let cloudinaryResponse = await uploadOnCloudinary(filePath, originalname); // Uploading file to Cloudinary
+    if (!cloudinaryResponse) {
+      return res
+        .status(500)
+        .json({ message: "Failed to upload image to Cloudinary" }); // If upload fails, send error
+    }
+    profile = cloudinaryResponse.secure_url;
+    // }
+    console.log(profile)
+    req.body.imageUrl = profile;
     const saveProduct = await insertProductIntoDB(req.body);
     if (saveProduct == null) {
       return next(new Error("Product not saved")); // If product not saved, send error
     }
     res.status(200).json({ message: "Product save" });
-    return;
+
   } catch (error) {
     next(error);
   }
@@ -70,7 +101,25 @@ export const getProductById = async (
 ) => {
   try {
     const { id } = req.params;
-    const product = await getProduct(Number(id));
+    const product = await getProductViaId(Number(id));
+    if (!product) {
+      throw new ApiError(400, "Product not found");
+    }
+    res.send(product);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const getProductsByName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { productName } = req.params;
+    const product = await findProductByName(productName);
     if (!product) {
       throw new ApiError(400, "Product not found");
     }
@@ -98,12 +147,24 @@ export const updateProduct = async (
       reviews,
       isFeatured,
     } = req.body;
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const validate = await validateDto(req.body, ProductDTO, next);
     if (!validate) {
       return next(new Error("Invalid request"));
     }
     // find the product by id
-    const product = await getProduct(Number(id));
+    const product = await getProductViaId(Number(id));
     if (!product) {
       return next(new Error("Product not found")); // If product not found, send error
     }
@@ -140,8 +201,20 @@ export const deleteProduct = async (
   next: NextFunction
 ) => {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const { id } = req.params;
-    const product = await getProduct(Number(id));
+    const product = await getProductViaId(Number(id));
     if (!product) {
       throw new ApiError(400, "Product not found");
     }

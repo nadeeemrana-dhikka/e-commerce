@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import {
   asignPermission,
-  asignRole,unasignPermission
+  asignRole, unasignPermission
 } from "../../services/users/user.service";
 import { ApiError } from "../../utility/ApiError";
+import { checkIfUserIsAdmin } from '../../services/users/user.service'
+import { jwtVerification } from "../../utility/jwtVerification"
 
 export async function asignRoleToUser(
   req: Request,
@@ -11,6 +13,18 @@ export async function asignRoleToUser(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const { userId, roleId } = req.body;
     const roleResult = await asignRole(userId, roleId);
     res.status(200).json(roleResult);
@@ -25,6 +39,18 @@ export async function asignPermissionToRole(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const { roleId, permissionId } = req.body;
     await asignPermission(roleId, permissionId);
     res
@@ -42,6 +68,18 @@ export async function unasignPermissionFromRole(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const { roleId, permissionId } = req.body;
     await unasignPermission(roleId, permissionId);
     res

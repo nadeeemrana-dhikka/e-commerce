@@ -5,8 +5,9 @@ import permissions from "./user/permissions.routes";
 import asignPermission from "./user/asignPermissions.routes";
 import product from "../routes/products/products.routes";
 import cart from "./orders/cart.routes";
-import cookieParser from "cookie-parser";
-
+import payments from "./orders/payments.routes"
+ import cookieParser from "cookie-parser";
+import orders from "./orders/orders.routes";
 const router = Router();
 router.use(cookieParser());
 
@@ -17,5 +18,6 @@ router.use("/", permissions);
 router.use("/", asignPermission);
 router.use("/", product);
 router.use("/", cart);
-
+router.use("/", payments);
+router.use("/", orders);
 export default router;

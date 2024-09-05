@@ -34,13 +34,13 @@ const upload = multer({
 });
 
 // Middleware to handle file upload and check if a file is present
-const handleFileUpload = (req: Request, res: Response, next: NextFunction) => {
-    if (!req.file) {
-        // No file was uploaded, continue to the controller
-        return next();
-    }
+// const handleFileUpload = (req: Request, res: Response, next: NextFunction) => {
+//     if (!req.file) {
+//         // No file was uploaded, continue to the controller
+//         return next();
+//     }
 
-    // If a file is present, proceed with file handling
-    next();
-};
-export { upload, handleFileUpload };
+//     // If a file is present, proceed with file handling
+//     next();
+// };
+export { upload,   };

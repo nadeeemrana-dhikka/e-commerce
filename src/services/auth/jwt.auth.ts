@@ -14,8 +14,8 @@ export async function jwtToken(user: any) {
 }
 
 // Function to generate a JWT refresh token
-export async function jwtRefreshToken(userid: any) {
-  const userForToken = { id: userid }; // Creating payload for JWT refresh token
+export async function jwtRefreshToken(user: any) {
+  const userForToken = { id: user.id, email: user.email, name: user.name }; // Creating payload for JWT token
   const refreshToken = jwt.sign(userForToken, JWT_SECRET || "", { // Signing the token with JWT_SECRET and setting expiration
     expiresIn: REFRESH_TOKEN_EXPIRE, // Setting expiration time for refresh token
   });

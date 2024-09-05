@@ -5,8 +5,9 @@ import { AppDataSource } from "../../models/database/connection";
 const cartRepository = AppDataSource.getRepository(Cart);
 
 // Existing methods...
-export async function createCartToDB(createCartDto: CartDto): Promise<Cart> {
-  const cart = cartRepository.create(createCartDto);
+export async function createCartToDB(cart:any): Promise<Cart> {
+  // const cart = cartRepository.create(createCartDto);
+  console.log("cart =>>>>",cart)
   return await cartRepository.save(cart);
 }
 
@@ -24,19 +25,22 @@ export async function findCartByUserIdAndProductId(
 }
 
 export async function updateCartItemQuantity(cartData: any) {
-  const { userId, productId, quantity } = cartData;
-  const result = await cartRepository.update(
-     { userId, productId },
-   cartData);
+  const { userId, productId, quantity,totalPrice ,id} = cartData;
+  const result = await cartRepository.createQueryBuilder()
+  .update(Cart)
+  .set({ quantity, totalPrice }) // Set updated fields
+  .where("id", {id})
+  .execute();
 
-  if (!result) {
+  if (result.affected === 0) {
     throw new Error("Cart not found");
   }
   return result;
 }
+// export const getAllCartByuserId=async(userId:number) => {
+//   return await cartRepository.find({where: { userId,isOdered:false}})
+//  }
 
-export const getAllCartByuserId=async(userId:number) => {
- return await cartRepository.find({where: {
-  userId
- }})
+export const getAllCartUnOdered=async(userId:number) => {
+ return await cartRepository.find({where: { userId,isOdered:false}})
 }

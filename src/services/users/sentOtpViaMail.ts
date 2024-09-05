@@ -34,7 +34,7 @@ export async function sentOtpByMail(
     if (!mailTest) {
       throw new Error("Mail not sent, something went wrong"); // Throwing error if email sending fails
     }
-    console.log("mail sent");
+    // console.log(req.email);
     const saveOTP = await otpDataInsert(req, res, otp); // Saving the OTP data
     if(!saveOTP){
       throw new Error("OTP not saved");

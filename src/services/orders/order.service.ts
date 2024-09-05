@@ -6,9 +6,9 @@ const orderRepository = AppDataSource.getRepository(Order);
 
 // Existing methods...
 export async function createOrderToDB(
-  createOrderDto: CreateOrderDto
+  order: any
 ): Promise<Order> {
-  const order = orderRepository.create(createOrderDto);
+  // const order = orderRepository.create(createOrderDto);
   return await orderRepository.save(order);
 }
 export async function getAllOrdersToDB(): Promise<Order[]> {

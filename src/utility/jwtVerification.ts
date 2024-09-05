@@ -6,6 +6,9 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 export const jwtVerification = async (req: any, next: NextFunction) => {
   try {
   const authHeader = req.headers?.authorization; // Get the Authorization header
+  if(!authHeader){
+    return null
+  }
   let token;
   if (authHeader) {
     if (authHeader.startsWith("Bearer ")) {
@@ -13,15 +16,15 @@ export const jwtVerification = async (req: any, next: NextFunction) => {
       console.log("Token:", token);
     }
   } else {
-    return next(new Error("JWT_SECRET not found")); // Error if JWT_SECRET is missing
+    return   next(new Error("JWT_SECRET not found")); // Error if JWT_SECRET is missing
   }
 
   if (!JWT_SECRET) {
-    return next(new Error("JWT_SECRET not found")); // Error if JWT_SECRET is not defined
+    return  next(new Error("JWT_SECRET not found")); // Error if JWT_SECRET is not defined
   }
 
     // Verify the token and specify the algorithm
-    const decodedToken = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
+    const decodedToken = jwt.verify(token, JWT_SECRET+"",{ algorithms: ["HS256"] });
     if (!decodedToken) {
       return next(new Error("Invalid token")); // Error if token is invalid
     }

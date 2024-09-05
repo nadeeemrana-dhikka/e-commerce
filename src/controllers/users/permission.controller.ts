@@ -6,6 +6,8 @@ import {
   permissionDeleteInDb,
 } from "../../services/users/permission.service";
 import { ApiError } from "../../utility/ApiError";
+import { jwtVerification } from "../../utility/jwtVerification"
+import {checkIfUserIsAdmin } from '../../services/users/user.service'
 
 export async function createPermission(
   req: Request,
@@ -13,6 +15,18 @@ export async function createPermission(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(!admin){
+    return res.status(400).json({"message": "Only Admin can do this"})
+   }
     const { permission } = req.body;
     const result = await permissionInsertInDb(permission);
     if (!result) {
@@ -28,7 +42,18 @@ export async function getPermissions(
   res: Response,
   next: NextFunction
 ) {
-  try {
+  try { const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(!admin){
+    return res.status(400).json({"message": "Only Admin can do this"})
+   }
     const result = await getallpermissions();
     if (result.length <= 0) {
       throw new ApiError(400, "Permissions are not available"); // Checking if any field is empty
@@ -44,7 +69,18 @@ export async function updatePermission(
   res: Response,
   next: NextFunction
 ) {
-  try {
+  try { const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(!admin){
+    return res.status(400).json({"message": "Only Admin can do this"})
+   }
     const { permissionId, newPermission } = req.body;
     const result = await permissionUpdateInDb(permissionId, newPermission);
     if (!result) {
@@ -61,7 +97,18 @@ export async function deletePermission(
   res: Response,
   next: NextFunction
 ) {
-  try {
+  try { const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(!admin){
+    return res.status(400).json({"message": "Only Admin can do this"})
+   }
     const { id } = req.body;
     const result = await permissionDeleteInDb(id);
     if (!result) {

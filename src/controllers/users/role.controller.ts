@@ -6,6 +6,8 @@ import {
   roleDeleteInDb,
 } from "../../services/users/roles.service";
 import { ApiError } from "../../utility/ApiError";
+import { checkIfUserIsAdmin } from '../../services/users/user.service'
+import { jwtVerification } from "../../utility/jwtVerification"
 
 export async function createRole(
   req: Request,
@@ -13,6 +15,18 @@ export async function createRole(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const { role } = req.body;
     const result = await roleInsertInDb(role);
     if (!result) {
@@ -29,6 +43,18 @@ export async function getroles(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const result = await getallroles();
     if (result.length <= 0) {
       throw new ApiError(400, "Roles are not available"); // Checking if any field is empty
@@ -45,6 +71,18 @@ export async function updateRole(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const { roleId, newRole } = req.body;
     const result = await roleUpdateInDb(roleId, newRole);
     if (!result) {
@@ -62,6 +100,18 @@ export async function deleteRole(
   next: NextFunction
 ) {
   try {
+    const user = await jwtVerification(req, next);
+    if (!user) {
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (!admin) {
+      return res.status(400).json({ "message": "Only Admin can do this" })
+    }
     const { id } = req.body;
     const result = await roleDeleteInDb(id);
     if (!result) {

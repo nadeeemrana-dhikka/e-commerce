@@ -27,11 +27,11 @@ const uploadOnCloudinary = async (localFilePath: any, originalname: any) => {
     const uploadResult = await cloudinary.uploader.upload(localFilePath, {
       public_id: originalname, // Setting the public_id to the original file name
     });
-
-    fs.unlinkSync(localFilePath); // Delete the local file after successful upload
+    console.log("localFilePath",localFilePath)
+   await fs.unlinkSync(localFilePath); // Delete the local file after successful upload
     return uploadResult; // Return the Cloudinary upload result
   } catch (error) {
-    fs.unlinkSync(localFilePath); // Delete the local file in case of error
+  await fs.unlinkSync(localFilePath); // Delete the local file in case of error
     console.log(error); // Log the error to console
     throw error; // Throw the error to be handled by the calling function
   }

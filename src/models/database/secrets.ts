@@ -1,3 +1,4 @@
+import exp from "constants";
 import dotenv from "dotenv";
 
 dotenv.config({ path: ".env" });
@@ -10,3 +11,4 @@ export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
 export const TOKEN_EXPIRE = process.env.TOKEN_EXPIRE;
 export const REFRESH_TOKEN_EXPIRE = process.env.REFRESH_TOKEN_EXPIRE;
+export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY

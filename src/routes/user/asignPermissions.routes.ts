@@ -8,5 +8,5 @@ const asignRouter = Router();
 
 asignRouter.post("/asign-role", asignRoleToUser);
 asignRouter.post("/asign-permission",asignPermissionToRole);
-asignRouter.post("/unasign-permisson", unasignPermissionFromRole);
+asignRouter.post("/unasign-permisson",unasignPermissionFromRole);
 export default asignRouter;

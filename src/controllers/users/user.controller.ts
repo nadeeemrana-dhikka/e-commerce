@@ -133,7 +133,7 @@ export const createUser = async (
           .status(500)
           .json({ message: "Failed to upload image to Cloudinary" }); // If upload fails, send error
       }
-       profile = cloudinaryResponse.secure_url;
+      profile = cloudinaryResponse.secure_url;
     }
     // Getting secure URL of uploaded file
 
@@ -161,54 +161,54 @@ export const createUser = async (
   }
 };
 
-export const 
+export const
 
 
-loginUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { email, password } = req.body; // Extracting email and password from request body
-    if (!email && !password) {
-      return next(new Error("email and password are required")); // Checking if email and password are provided
-    }
-    const user = await findOneUser(email); // Finding user by email
-    if (!user) {
-      return next(new Error("User not found")); // If user not found, send error
-    }
-    const isMatch = await bcrypt.compare(password, user.password); // Comparing provided password with stored password
-    if (!isMatch) {
-      return next(new Error("Password is incorrect")); // If password does not match, send error
-    }
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-    const token = await jwtToken(user); // Generating JWT token
-    const refreshToken = await jwtRefreshToken(user); // Generating refresh token
-    refreshTokenSaveInDB(email, refreshToken);
+  loginUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { email, password } = req.body; // Extracting email and password from request body
+      if (!email && !password) {
+        return next(new Error("email and password are required")); // Checking if email and password are provided
+      }
+      const user = await findOneUser(email); // Finding user by email
+      if (!user) {
+        return next(new Error("User not found")); // If user not found, send error
+      }
+      const isMatch = await bcrypt.compare(password, user.password); // Comparing provided password with stored password
+      if (!isMatch) {
+        return next(new Error("Password is incorrect")); // If password does not match, send error
+      }
+      const options = {
+        httpOnly: true,
+        secure: true,
+      };
+      const token = await jwtToken(user); // Generating JWT token
+      const refreshToken = await jwtRefreshToken(user); // Generating refresh token
+      refreshTokenSaveInDB(email, refreshToken);
 
-    res
-      .status(200)
-      .cookie("accessToken", token, options) // Setting access token as cookie
-      .cookie("refreshToken", refreshToken, options) // Setting refresh token as cookie
-      .json(
-        new ApiResponse(
-          200,
-          {
-            user: user.name,
-            token,
-            refreshToken,
-          },
-          "User logged In Successfully"
-        )
-      ); // Sending success response
-  } catch (error) {
-    next(error); // Handling any errors
-  }
-};
+      res
+        .status(200)
+        .cookie("accessToken", token, options) // Setting access token as cookie
+        .cookie("refreshToken", refreshToken, options) // Setting refresh token as cookie
+        .json(
+          new ApiResponse(
+            200,
+            {
+              user: user.name,
+              token,
+              refreshToken,
+            },
+            "User logged In Successfully"
+          )
+        ); // Sending success response
+    } catch (error) {
+      next(error); // Handling any errors
+    }
+  };
 
 export const sendOtpForResetPassword = async (
   req: Request,
@@ -223,7 +223,11 @@ export const sendOtpForResetPassword = async (
       return next(new Error("User not exists")); // If user not found, send error
     }
     const subject = "Password Reset Request"; // Subject for OTP email
-    await sentOtpByMail(req, res, subject); // Sending OTP via email
+    const result = await sentOtpByMail(req, res, subject); // Sending OTP via email
+    if (!result) {
+      next(Error("email not send"))
+    }
+    res.status(200).json("otp sent");
   } catch (error) {
     next(error); // Handling any errors
   }
@@ -240,7 +244,7 @@ export const verifyOtpForResetPassword = async (
       throw new ApiError(400, "All fields are required"); // Checking if any field is empty
     }
     // Check if the new password is strong or not
-    const input = plainToInstance(passwordDto, req.body); // Transforming plain object to class instance
+    const input = plainToInstance(passwordDto, { password :newPassword }); // Transforming plain object to class instance
     const validationErrors = await validate(input); // Validating the input
     if (validationErrors.length > 0) {
       const errorMessages = validationErrors

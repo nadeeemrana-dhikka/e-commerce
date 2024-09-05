@@ -2,7 +2,6 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTabl
 import { Role } from "./role.entity";
 import { Permission } from "./permission.entity";
 import { Order } from "../orders/order.entity";
-
 @Entity({
   name: "users"
 })
@@ -36,8 +35,8 @@ export class User extends BaseEntity {
   @Column()
   profile!: string;
 
-  @Column()
-  refreshToken: string = "0";
+  @Column({ type: 'varchar', length: 255 })
+  refreshToken: string = "";
 
   @Column({ default: 0 })
   status!: number;
@@ -57,3 +56,5 @@ export class User extends BaseEntity {
   })
   updated_at?: Date;
 }
+
+

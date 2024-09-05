@@ -5,7 +5,10 @@ import {
   CreateOrderDto,
   UpdateOrderDto,
 } from "../../services/orders/order.Dto";
-
+import { jwtVerification } from "../../utility/jwtVerification";
+import { JWT_SECRET } from "../../models/database/secrets";
+import {checkIfUserIsAdmin } from '../../services/users/user.service'
+import { getAllCartUnOdered } from '../../services/orders/cart.service'
 // Read
 // src/controllers/order.controller.ts
 
@@ -14,13 +17,48 @@ export const createOrder = async (
   res: Response,
   next: NextFunction
 ) => {
-  const createOrderDto: CreateOrderDto = req.body;
   try {
-    const order = await createOrderToDB(createOrderDto);
+    // const createOrderDto: CreateOrderDto = req.body;
+    const token = req.headers;
+    console.log(token);
+    if (!JWT_SECRET) {
+      return next(new Error("JWT_SECRET not found"));
+    }
+   
+    const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(admin){
+    return res.status(400).json({"message": "Only Customer can do this"})
+   }    
+   req.body.userId = user?.id;
+    const cart =await getAllCartUnOdered(user.id);
+    let order
+    console.log(cart);
+  cart.forEach( async(item) => {
+      const items ={
+          id: item.id,
+          userId: item.userId,
+          productId: item.productId,
+         quantity: item.quantity,
+          price: item.price,
+          totalPrice: item.totalPrice
+      }
+      await createOrderToDB(items);
+  });
+  
+    // const order = await createOrderToDB();
+
     if(!order){
       return next(new Error("Order not created"));
     }
-    res.status(201).json(order);
+    res.status(201).json(cart);
   } catch (error) {
     next(error);
   }

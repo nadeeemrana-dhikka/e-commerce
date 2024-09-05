@@ -7,7 +7,7 @@ import {
   getOrderById,
   getOrdersByUser,
   getOrdersByStatus,
-} from "src/controllers/orders/order.controller";
+} from "../../controllers/orders/order.controller";
 
 const orders = Router();
 orders.post("/orders-create", createOrder);

@@ -4,11 +4,13 @@ import {
   createCartToDB,
   updateCartItemQuantity,
   findCartByUserIdAndProductId,
-  getAllCartByuserId, 
+  getAllCartUnOdered, 
 } from "../../services/orders/cart.service";
 import { JWT_SECRET } from "../../models/database/secrets";
 import { validateDto } from "../../utility/validateDto";
 import { jwtVerification } from "../../utility/jwtVerification";
+import {checkIfUserIsAdmin } from '../../services/users/user.service'
+import { getProductViaId  } from "../../services/products/products.service"
 export const insertCart = async (
   req: Request,
   res: Response,
@@ -24,27 +26,47 @@ export const insertCart = async (
     if (!JWT_SECRET) {
       return next(new Error("JWT_SECRET not found"));
     }
-    const user = await jwtVerification(req, next);
-    // console.log(user["id"]);
-    req.body.userId = user?.id;
+   
+    const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(admin){
+    return res.status(400).json({"message": "Only Customer can do this"})
+   }    
+   req.body.userId = user?.id;
 
-    const { quantity, productId, price } = req.body;
-    req.body.totalPrice = quantity * price;
+    const { quantity, productId } = req.body;
+    // req.body.totalPrice = quantity * price;
     // check if same item is already in cart
+   const product = await getProductViaId(productId)
+   if(!product){
+    return next("item not exist");
+   }
     const cart = await findCartByUserIdAndProductId(user?.id, productId);
     if (cart) {
       const cartquantity = cart.quantity + quantity;
       cart.quantity = cartquantity;
-      cart.totalPrice = cartquantity * price;
-      await updateCartItemQuantity(cart);
-      res.status(200).json(cart);
+      cart.totalPrice = cartquantity * product.price;
+      console.log("updated cart id",cart.id)
+     const updatedCart = await updateCartItemQuantity(cart);
+     return  res.status(200).json(cart);
     }
     const validate = await validateDto(req.body, CartDto, next);
     if (!validate) {
       return next(new Error("Invalid request"));
     }
+    const userId = user.id;
+    const price = product.price;
+    const totalPrice = product
+    .price * quantity;
     // create order
-    const order = await createCartToDB(req.body);
+    const order = await createCartToDB({userId,productId,quantity,price,totalPrice } );
     if (!order) {
       return next(new Error("Order not created"));
     }
@@ -61,12 +83,21 @@ export const totalCartPrice = async (
 ) => {
   try {
     const token = req.cookies.accessToken;
-    if (!JWT_SECRET) {
-      return next(new Error("JWT_SECRET not found"));
+    const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
     }
-    const user = await jwtVerification(req, next);
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(admin){
+    return res.status(400).json({"message": "Only Customer can do this"})
+   }   
+
     const userid = user?.id;
-    const allCartItems = await getAllCartByuserId(userid);
+    const allCartItems = await getAllCartUnOdered(userid);
 
     let totalPriceOfCart = 0;
     allCartItems.forEach((item) => {
@@ -85,10 +116,19 @@ export const getAllCart = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.headers?.authorization;
-    // console.log("token printed in verify",token);
-    const user = await jwtVerification(req, next);
-    const cart = await getAllCartByuserId(user?.id);
+    const user = await jwtVerification(req,next);
+    if(!user){
+      return res.status(400).json({
+        "error": "Bad Request",
+        "message": "Required Token is missing"
+      })
+    }
+    console.log("user=>",user.id)
+   const admin =await checkIfUserIsAdmin(user.id)
+   if(admin){
+    return res.status(400).json({"message": "Only Customer can do this"})
+   }   
+     const cart = await getAllCartUnOdered(user?.id);
     console.log(user?.id);
 
     res.status(200).json(cart);

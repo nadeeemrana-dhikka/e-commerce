@@ -172,3 +172,22 @@ export async function updateUserProfileInDB({ email, name, phone, profile }: any
   return updateResult;
 }
 
+
+export async function checkIfUserIsAdmin(userId: number): Promise<boolean> {
+   
+  // User ko load karo roles ke saath
+  const user = await userRepository.findOne({
+      where: { id: userId },
+      relations: ["roles"]
+  });
+
+  // Agar user nahi mila to false return karo
+  if (!user) {
+      return false;
+  }
+
+  // Check karo agar user ka role "admin" hai
+  const isAdmin = user.roles.some(role => role.role === "admin");
+
+  return isAdmin;
+}
