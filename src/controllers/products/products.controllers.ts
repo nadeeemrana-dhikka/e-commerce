@@ -17,7 +17,7 @@ import { jwtVerification } from "../../utility/jwtVerification"
 
 // insert a product but check using productDto
 export const createProduct = async (
-  req: Request,
+  req: Request, 
   res: Response,
   next: NextFunction
 ) => {

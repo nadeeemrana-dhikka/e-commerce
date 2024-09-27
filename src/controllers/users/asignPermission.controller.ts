@@ -3,8 +3,7 @@ import {
   asignPermission,
   asignRole, unasignPermission
 } from "../../services/users/user.service";
-import { ApiError } from "../../utility/ApiError";
-import { checkIfUserIsAdmin } from '../../services/users/user.service'
+ import { checkIfUserIsAdmin } from '../../services/users/user.service'
 import { jwtVerification } from "../../utility/jwtVerification"
 
 export async function asignRoleToUser(

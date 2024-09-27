@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import { User } from '../user/user.entity'; // Assuming a User entity exists
 import { Order } from '../orders/order.entity'; // Importing Order entity
-
+import { Product } from '../products/products.entity';
 @Entity({name: 'cart'})
 export class Cart {
   @PrimaryGeneratedColumn()
@@ -24,6 +24,9 @@ export class Cart {
 
   @ManyToOne(() => Order, (order) => order.cartItems)
   order!: Order; // Creates relation to Order entity
+
+  @ManyToOne(() => Product, (product) => product.carts)
+  product!: Product;
 
   @Column('boolean')
   isOdered: boolean = false ;

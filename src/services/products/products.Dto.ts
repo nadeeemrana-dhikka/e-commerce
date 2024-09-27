@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional, IsDecimal, IsBoolean, IsInt, MaxLength } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsDecimal, IsBoolean, IsInt, MaxLength, IsArray } from 'class-validator';
 
 export class ProductDTO {
     // Product Name
@@ -15,9 +15,8 @@ export class ProductDTO {
     price!: number;
 
     // Product Category
-    @IsString()
-    @MaxLength(255)
-    category!: string;
+    @IsArray()
+    category!: [];
 
     // Stock Quantity
     @IsInt()

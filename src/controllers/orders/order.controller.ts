@@ -7,10 +7,8 @@ import {
 } from "../../services/orders/order.Dto";
 import { jwtVerification } from "../../utility/jwtVerification";
 import { JWT_SECRET } from "../../models/database/secrets";
-import {checkIfUserIsAdmin } from '../../services/users/user.service'
+import { checkIfUserIsAdmin } from '../../services/users/user.service'
 import { getAllCartUnOdered } from '../../services/orders/cart.service'
-// Read
-// src/controllers/order.controller.ts
 
 export const createOrder = async (
   req: Request,
@@ -24,38 +22,38 @@ export const createOrder = async (
     if (!JWT_SECRET) {
       return next(new Error("JWT_SECRET not found"));
     }
-   
-    const user = await jwtVerification(req,next);
-    if(!user){
+
+    const user = await jwtVerification(req, next);
+    if (!user) {
       return res.status(400).json({
         "error": "Bad Request",
         "message": "Required Token is missing"
       })
     }
-    console.log("user=>",user.id)
-   const admin =await checkIfUserIsAdmin(user.id)
-   if(admin){
-    return res.status(400).json({"message": "Only Customer can do this"})
-   }    
-   req.body.userId = user?.id;
-    const cart =await getAllCartUnOdered(user.id);
+    console.log("user=>", user.id)
+    const admin = await checkIfUserIsAdmin(user.id)
+    if (admin) {
+      return res.status(400).json({ "message": "Only Customer can do this" })
+    }
+    req.body.userId = user?.id;
+    const cart = await getAllCartUnOdered(user.id);
     let order
     console.log(cart);
-  cart.forEach( async(item) => {
-      const items ={
-          id: item.id,
-          userId: item.userId,
-          productId: item.productId,
-         quantity: item.quantity,
-          price: item.price,
-          totalPrice: item.totalPrice
+    cart.forEach(async (item) => {
+      const items = {
+        id: item.id,
+        userId: item.userId,
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        totalPrice: item.totalPrice
       }
       await createOrderToDB(items);
-  });
-  
+    });
+
     // const order = await createOrderToDB();
 
-    if(!order){
+    if (!order) {
       return next(new Error("Order not created"));
     }
     res.status(201).json(cart);
@@ -70,8 +68,20 @@ export const getAllOrders = async (
   next: NextFunction
 ) => {
   try {
+         const user = await jwtVerification(req, next);
+         if (!user) {
+                 return res.status(400).json({
+                         "error": "Bad Request",
+                         "message": "Required Token is missing"
+                 })
+         }
+         console.log("user=>", user.id)
+         const admin = await checkIfUserIsAdmin(user.id)
+         if (!admin) {
+                 return res.status(400).json({ "message": "Only Admin can do this" })
+         }
     const orders = await getAllOrdersToDB();
-    if(!orders){
+    if (!orders) {
       return next(new Error("Orders not found"));
     }
     res.status(200).json(orders);
@@ -87,6 +97,9 @@ export const getOrderById = async (
 ) => {
   const { id } = req.params;
   try {
+    if(!id){
+      return next("Missing user Id")
+    }
     const order = await getOrderByIdToDB(Number(id));
     if (order) {
       res.status(200).json(order);
@@ -105,8 +118,11 @@ export const getOrdersByUser = async (
 ) => {
   const { userId } = req.query;
   try {
+    if(!userId){
+      return next("Missing user Id")
+    }
     const orders = await getOrdersByUserToDB(Number(userId));
-    if(!orders){
+    if (!orders) {
       return next(new Error("Orders not found"));
     }
     res.status(200).json(orders);
@@ -137,6 +153,18 @@ export const updateOrder = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
+  const user = await jwtVerification(req, next);
+  if (!user) {
+    return res.status(400).json({
+      "error": "Bad Request",
+      "message": "Required Token is missing"
+    })
+  }
+  console.log("user=>", user.id)
+  const admin = await checkIfUserIsAdmin(user.id)
+  if (!admin) {
+    return res.status(400).json({ "message": "Only Admin can do this" })
+  }
   const updateOrderDto: UpdateOrderDto = req.body;
   try {
     const updatedOrder = await updateOrderToDB(
@@ -159,6 +187,18 @@ export const deleteOrder = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
+  const user = await jwtVerification(req, next);
+  if (!user) {
+    return res.status(400).json({
+      "error": "Bad Request",
+      "message": "Required Token is missing"
+    })
+  }
+  console.log("user=>", user.id)
+  const admin = await checkIfUserIsAdmin(user.id)
+  if (!admin) {
+    return res.status(400).json({ "message": "Only Admin can do this" })
+  }
   try {
     const deleted = await deleteOrderToDB(Number(id));
     if (deleted) {

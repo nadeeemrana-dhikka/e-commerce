@@ -8,6 +8,7 @@ import cart from "./orders/cart.routes";
 import payments from "./orders/payments.routes"
  import cookieParser from "cookie-parser";
 import orders from "./orders/orders.routes";
+import category from "./products/category.routes";
 const router = Router();
 router.use(cookieParser());
 
@@ -20,4 +21,5 @@ router.use("/", product);
 router.use("/", cart);
 router.use("/", payments);
 router.use("/", orders);
+router.use("/", category);
 export default router;
